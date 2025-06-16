@@ -42,15 +42,17 @@ def main():
         dt = clock.tick(60) / 1000
         screen.fill("black")
         updatable.update(dt)
-        for entity in asteroids:
-            if player.collision(entity):
+        for asteroid in asteroids:
+            if player.collision(asteroid):
                 raise SystemExit("Game over!")
+            for shot in shots:
+                if shot.collision(asteroid):
+                    pygame.sprite.Sprite.kill(asteroid)
+                    pygame.sprite.Sprite.kill(shot)
         for drawerables in drawable:
             drawerables.draw(screen)
         pygame.display.flip()
         
         
-
-
 if __name__ == "__main__":
     main()
