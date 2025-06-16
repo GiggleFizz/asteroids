@@ -47,7 +47,7 @@ def main():
                 raise SystemExit("Game over!")
             for shot in shots:
                 if shot.collision(asteroid):
-                    pygame.sprite.Sprite.kill(asteroid)
+                    asteroid.split()
                     pygame.sprite.Sprite.kill(shot)
         for drawerables in drawable:
             drawerables.draw(screen)
