@@ -4,6 +4,8 @@
 import pygame
 from constants import *
 from player import *
+from asteroid import *
+from asteroidfield import *
 
 def main():
 
@@ -12,9 +14,22 @@ def main():
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    drawable = pygame.sprite.Group(Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS))
-    updateable = pygame.sprite.Group(drawable)
+
+    #drawable = pygame.sprite.Group(Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS))
+    #updatable = pygame.sprite.Group(drawable)
+    #asteroids = pygame.sprite.Group(Asteroid(ASTEROID_MIN_RADIUS, ASTEROID_MAX_RADIUS, ASTEROID_KINDS, ASTEROID_SPAWN_RATE))
+
+    drawable = pygame.sprite.Group()
+    updatable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
     
+    Player.containers = (drawable, updatable)
+    Asteroid.containers = (asteroids, drawable, updatable)
+    AsteroidField.containers = (updatable)
+    
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS)
+    asteroid_field = AsteroidField()
+
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
@@ -28,7 +43,10 @@ def main():
         
         dt = clock.tick(60) / 1000
         screen.fill("black")
-        updateable.update(dt)
+        updatable.update(dt)
+        for entity in asteroids:
+            if player.collision(entity):
+                raise SystemExit("Game over!")
         for drawerables in drawable:
             drawerables.draw(screen)
         pygame.display.flip()
